@@ -4,10 +4,10 @@ const Seat = require('../models/seats.model');
 // get all posts
 exports.getAll = async (req, res) => {
   try {
-    console.log(req.body);
+    //console.log(req.body);
     const {day} = req.body;
     res.json(await Seat.find());
-    console.log(await Seat.find());
+    //console.log(await Seat.find());
   }
   catch(err) {
     res.status(500).json({ message: err });
