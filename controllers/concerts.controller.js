@@ -16,6 +16,49 @@ exports.getAll = async (req, res) => {
   }
 };
 
+exports.getAllperformer = async (req, res) => {
+  try {
+    res.json(await Concert.find({performer:{ $regex: '.*' + req.params.id + '.*' } }));
+    console.log(await Concert.find());
+  }
+  catch(err) {
+    res.status(500).json({ message: err });
+  }
+};
+
+exports.getAllgenre = async (req, res) => {
+  try {
+    res.json(await Concert.find({genre:{ $regex: '.*' + req.params.id + '.*' } }));
+    console.log(await Concert.find());
+  }
+  catch(err) {
+    res.status(500).json({ message: err });
+  }
+};
+
+exports.getAllprice= async (req, res) => {
+  try {
+    res.json(await Concert.find({price:{ $gt: req.params.idmin, $lt: req.params.idmax} }));
+
+    console.log(await Concert.find({price:{ $gt: 19, $lt: 40} }));
+  }
+
+  catch(err) {
+    res.status(500).json({ message: err });
+  }
+};
+
+
+exports.getAllday = async (req, res) => {
+  try {
+    res.json(await Concert.find({day:req.params.id }));
+    console.log(await Concert.find({day:2}));
+  }
+  catch(err) {
+    res.status(500).json({ message: err });
+  }
+};
+
 /*
 
 router.route('/concerts/:id').get((req, res) => {

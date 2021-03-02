@@ -1,10 +1,11 @@
-const express = require('express')
+const express = require('express');
+const helmet = require('helmet');
 const path = require('path');
 const cors = require('express-cors');
 const socket = require('socket.io');
 const mongoose = require('mongoose');
 const app = express();
-
+app.use(helmet());
 
 app.use(cors());
 
@@ -47,7 +48,19 @@ app.use((req, res) => {
 // connects our backend code with the database
 //mongoose.connect('mongodb://localhost:27017/NewWaveDB', { useNewUrlParser: true, useUnifiedTopology: true  });
 //mongoose.connect('mongodb+srv://AtlsrtaedfDB:estATef12@cluster0.vam56.mongodb.net/myFirstDatabase?retryWrites=true&w=majority', { useNewUrlParser: true, useUnifiedTopology: true  });
-mongoose.connect('mongodb+srv://AtlsrtaedfDB:estATef12@cluster0.vam56.mongodb.net/NewWaveDB?retryWrites=true&w=majority', { useNewUrlParser: true, useUnifiedTopology: true  });
+
+//const dbURI = process.env.NODE_ENV === 'production' ? `mongodb+srv://${process.env.DB_LOGIN}:${process.env.DB_PASS}@
+//cluster0.vam56.mongodb.net/NewWaveDB?retryWrites=true&w=majority` : `mongodb://localhost:27017/newWaveDB`;
+//if (process.env.NODE_ENV != `test`) {
+//  mongoose.connect(dbURI, { useNewUrlParser: true, useUnifiedTopology: true });
+
+try {
+  mongoose.connect('mongodb+srv://AtlsrtaedfDB:estATef12@cluster0.vam56.mongodb.net/NewWaveDB?retryWrites=true&w=majority', { useNewUrlParser: true, useUnifiedTopology: true  });
+} catch(err) {
+  if(process.env.debug === true) console.log(err);
+  else console.log('Couldn\'t connect to db...');
+}
+
 const db = mongoose.connection;
 
 db.once('open', () => {
