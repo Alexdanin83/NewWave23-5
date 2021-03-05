@@ -18,16 +18,12 @@ app.use(function(req, res, next) {
   next();
 });
 
-
-
-
 app.use((req, res, next) => {
   req.io = io;
   next();
 });
 
 app.use(express.json());
-// Serve static files from the React app
 app.use(express.static(path.join(__dirname, '/client/build')));
 const testimonials = require('./routes/testimonials.router');
 const concerts = require('./routes/concerts.router');
@@ -43,16 +39,6 @@ app.get('*', (req, res) => {
 app.use((req, res) => {
   res.status(404).json({message: 'Not found...'});
 })
-
-
-// connects our backend code with the database
-//mongoose.connect('mongodb://localhost:27017/NewWaveDB', { useNewUrlParser: true, useUnifiedTopology: true  });
-//mongoose.connect('mongodb+srv://AtlsrtaedfDB:estATef12@cluster0.vam56.mongodb.net/myFirstDatabase?retryWrites=true&w=majority', { useNewUrlParser: true, useUnifiedTopology: true  });
-
-//const dbURI = process.env.NODE_ENV === 'production' ? `mongodb+srv://${process.env.DB_LOGIN}:${process.env.DB_PASS}@
-//cluster0.vam56.mongodb.net/NewWaveDB?retryWrites=true&w=majority` : `mongodb://localhost:27017/newWaveDB`;
-//if (process.env.NODE_ENV != `test`) {
-//  mongoose.connect(dbURI, { useNewUrlParser: true, useUnifiedTopology: true });
 
 try {
   mongoose.connect('mongodb+srv://AtlsrtaedfDB:estATef12@cluster0.vam56.mongodb.net/NewWaveDB?retryWrites=true&w=majority', { useNewUrlParser: true, useUnifiedTopology: true  });
