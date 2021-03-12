@@ -25,13 +25,6 @@ app.use((req, res, next) => {
 
 app.use(express.json());
 app.use(express.static(path.join(__dirname, '/client/build')));
-const testimonials = require('./routes/testimonials.router');
-const concerts = require('./routes/concerts.router');
-const seats = require('./routes/seats.router');
-
-app.use('/api', testimonials);
-app.use('/api', concerts);
-app.use('/api', seats);
 
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, '/client/build/index.html'));
@@ -41,7 +34,10 @@ app.use((req, res) => {
 })
 
 try {
-  mongoose.connect('mongodb+srv://AtlsrtaedfDB:estATef12@cluster0.vam56.mongodb.net/NewWaveDB?retryWrites=true&w=majority', { useNewUrlParser: true, useUnifiedTopology: true  });
+
+  //mongoose.connect('mongodb+srv://AtlsrtaedfDB:estATef12@cluster0.vam56.mongodb.net/NewWaveDB?retryWrites=true&w=majority', { useNewUrlParser: true, useUnifiedTopology: true  });
+  mongoose.connect('mongodb://localhost:27017/NewWaveDB', { useNewUrlParser: true, useUnifiedTopology: true  });
+
 } catch(err) {
   if(process.env.debug === true) console.log(err);
   else console.log('Couldn\'t connect to db...');
@@ -54,14 +50,29 @@ db.once('open', () => {
 });
 db.on('error', err => console.log('Error ' + err));
 
-const server = app.listen(process.env.PORT || 8000, () => {
+const server = app.listen(process.env.PORT || '8000', () => {
   console.log('Server is running on port: 8000');
 });
-const io = socket(server, {
-  cors: {
-    origin: '*',
-    }
-  });
-  io.on('connection', socket => {
+
+const testimonials = require('./routes/testimonials.router');
+const concerts = require('./routes/concerts.router');
+const seats = require('./routes/seats.router');
+
+app.use('/api', testimonials);
+app.use('/api', concerts);
+app.use('/api', seats);
+
+const io = socket(server);
+
+io.on('connection', socket => {
   console.log(`New client! Its id – ${socket.id}`);
+  /* socket.on('seatsUpdated', (seat) => {
+      console.log('Update');
+
+  }); */
+  socket.on('disconnect', () => {
+    console.log(`Oh, socket ${socket.id} has left`);
   });
+});
+
+module.exports = { server};
